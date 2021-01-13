@@ -23,6 +23,8 @@ simple source
 {
     parameters:
         @display("i=block/source");
+        volatile double times @unit(s);
+        volatile double lenghts @unit(bit);
     gates:
         output out;
 }
@@ -34,16 +36,14 @@ simple node
         double prob1;
     gates:
         input in[];
-        output out[];
+        inout gate[];
 }
-
 simple endNode
 {
     parameters:
         @display("i=block/arrival");
     gates:
-        input in[];
-        output out[];
+        inout gate[];
 }
 
 network StopAndWait
@@ -57,67 +57,21 @@ network StopAndWait
             delay = 0.1ms;
         }
     submodules:
-        source1: source {
-            @display("p=55,90");
-        }
-        source2: source {
-            @display("p=55,30");
-        }
-        source5: source {
-            @display("p=55,150");
-        }
-        node1: node {
-            @display("p=150,90");
-            prob1 = 1/4;
-            gates:
-                in[3];
-                out[2];
-        }
-        node2: node {
-            @display("p=250,30");
-            prob1 = 1/3;
-            gates:
-                in[5];
-                out[4];
-        }
-        node5: node {
-            @display("p=250,150");
-            prob1 = 1/2;
-            gates:
-                in[4];
-                out[3];
-        }
-        node3: endNode {
-            @display("p=400,30");
-            gates:
-                in[1];
-                out[1];
-        }
-        node4: endNode {
-            @display("p=400,150");
-            gates:
-                in[2];
-                out[2];
-        }
+        //node PROBS???
+        src[3]: source;
+        nd[3]: node;
+        end[2]: endNode;
+        
     connections:
-        source1.out --> node1.in[0];
-        source2.out --> node2.in[0];
-        source5.out --> node5.in[0];
+        src[0].out --> nd[1].in++;
+        src[1].out --> nd[0].in++;
+        src[2].out --> nd[2].in++;
 
-        node1.out[0] --> C --> node2.in[1];
-        node1.out[1] --> C --> node5.in[1];
+        nd[0].gate++ <--> C <--> nd[1].gate++;
+        nd[0].gate++ <--> C <--> nd[2].gate++;
+        nd[1].gate++ <--> C <--> nd[2].gate++;
+        nd[1].gate++ <--> C <--> end[0].gate++;
+        nd[1].gate++ <--> C <--> end[1].gate++;
+        nd[2].gate++ <--> C <--> end[1].gate++;
 
-        node2.out[0] --> C --> node1.in[1];
-        node2.out[1] --> C --> node5.in[2];
-        node2.out[2] --> C --> node4.in[0];
-        node2.out[3] --> C --> node3.in[0];
-
-        node3.out[0] --> C --> node2.in[4];
-
-        node4.out[0] --> C --> node2.in[3];
-        node4.out[1] --> C --> node5.in[3];
-
-        node5.out[0] --> C --> node1.in[2];
-        node5.out[1] --> C --> node2.in[2];
-        node5.out[2] --> C --> node4.in[1];
 }
