@@ -1,7 +1,7 @@
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
+// This program is free software: you can redistribute it anode/or modify
+// it unodeer the terms of the GNU Lesser General Public License as published by
+// the Free Software Founodeation, either version 3 of the License, or
 // (at your option) any later version.
 // 
 // This program is distributed in the hope that it will be useful,
@@ -58,20 +58,26 @@ network StopAndWait
         }
     submodules:
         //node PROBS???
-        src[3]: source;
-        nd[3]: node;
-        end[2]: endNode;
-        
-    connections:
-        src[0].out --> nd[1].in++;
-        src[1].out --> nd[0].in++;
-        src[2].out --> nd[2].in++;
+        src[3]: source {
+            @display("p=50,50,c,10,10,10");
+        }
+        node[3]: node {
+            @display("p=150,50,c,50");
+        }
+        endNode[2]: endNode {
+            @display("p=250,50,c,50");
+        }
 
-        nd[0].gate++ <--> C <--> nd[1].gate++;
-        nd[0].gate++ <--> C <--> nd[2].gate++;
-        nd[1].gate++ <--> C <--> nd[2].gate++;
-        nd[1].gate++ <--> C <--> end[0].gate++;
-        nd[1].gate++ <--> C <--> end[1].gate++;
-        nd[2].gate++ <--> C <--> end[1].gate++;
+    connections:
+        src[0].out --> node[1].in++;
+        src[1].out --> node[0].in++;
+        src[2].out --> node[2].in++;
+
+        node[0].gate++ <--> C <--> node[1].gate++;
+        node[0].gate++ <--> C <--> node[2].gate++;
+        node[1].gate++ <--> C <--> node[2].gate++;
+        node[1].gate++ <--> C <--> endNode[0].gate++;
+        node[1].gate++ <--> C <--> endNode[1].gate++;
+        node[2].gate++ <--> C <--> endNode[1].gate++;
 
 }
