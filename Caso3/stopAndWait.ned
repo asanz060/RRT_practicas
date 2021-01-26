@@ -23,8 +23,6 @@ simple source
 {
     parameters:
         @display("i=block/source");
-        volatile double times @unit(s);
-        volatile double lenghts @unit(bit);
     gates:
         output out;
 }
@@ -36,48 +34,59 @@ simple node
         double prob1;
     gates:
         input in[];
-        inout gate[];
+        output out[];
 }
+
 simple endNode
 {
     parameters:
         @display("i=block/arrival");
     gates:
-        inout gate[];
+        input in[];
+        output out[];
 }
 
 network StopAndWait
 {
-    @display("bgb=500,200");
+    @display("bgb=500,500");
     types:
         channel C extends DatarateChannel
         {
             datarate = 1000bps;
-            per = 0.01;
+            per = 0.5;
             delay = 0.1ms;
         }
     submodules:
         //node PROBS???
         src[3]: source {
-            @display("p=50,50,c,10,10,10");
+            @display("p=50,50,c,200");
         }
-        node[3]: node {
-            @display("p=150,50,c,50");
-        }
+        node[3]: node;
         endNode[2]: endNode {
-            @display("p=250,50,c,50");
+            @display("p=450,50,c,200");
         }
 
     connections:
-        src[0].out --> node[1].in++;
-        src[1].out --> node[0].in++;
+        endNode[0].out++ --> C --> node[0].in++;
+        node[0].out++ --> C --> endNode[0].in++;
+        
+        endNode[1].out++ --> C --> node[0].in++;
+        node[0].out++ --> C --> endNode[1].in++;
+        
+        node[0].out++ --> C --> node[2].in++;
+        node[2].out++ --> C --> node[0].in++;
+        
+        node[0].out++ --> C --> node[1].in++;
+        node[1].out++ --> C --> node[0].in++;
+        
+        endNode[1].out++ --> C --> node[2].in++;
+        node[2].out++ --> C --> endNode[1].in++;
+        
+        node[1].out++ --> C --> node[2].in++;
+        node[2].out++ --> C --> node[1].in++;
+    
+        src[0].out --> node[0].in++;
+        src[1].out --> node[1].in++;
         src[2].out --> node[2].in++;
-
-        node[0].gate++ <--> C <--> node[1].gate++;
-        node[0].gate++ <--> C <--> node[2].gate++;
-        node[1].gate++ <--> C <--> node[2].gate++;
-        node[1].gate++ <--> C <--> endNode[0].gate++;
-        node[1].gate++ <--> C <--> endNode[1].gate++;
-        node[2].gate++ <--> C <--> endNode[1].gate++;
 
 }

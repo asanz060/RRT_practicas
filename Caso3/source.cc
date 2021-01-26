@@ -26,7 +26,7 @@ void source::initialize(){
     event=new cMessage("event");
 
     double t=exponential(0.5, 0);
-    EV << "\nTime: " << t;
+    EV << "\nInitial time: " << t;
     scheduleAt(simTime()+t, event);
 }
 
@@ -49,8 +49,8 @@ myPacket* source::generarPaquete(){
 
     myPacket* p=new myPacket(packetName);
     p->setSeq(seq);
-    p->setSource(getId());
-    p->setType(1);
+    p->setSource(getIndex());
+    p->setType(0);
     seq++;
     double l=exponential(1000, 0);
     EV << "\nPacket length: " << l << " Seq: " << seq;
