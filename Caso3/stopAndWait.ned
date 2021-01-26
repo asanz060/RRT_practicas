@@ -53,7 +53,7 @@ network StopAndWait
         channel C extends DatarateChannel
         {
             datarate = 1000bps;
-            per = 0.5;
+            per = 0.05;
             delay = 0.1ms;
         }
     submodules:

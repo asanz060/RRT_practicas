@@ -9,6 +9,7 @@ using namespace omnetpp;
 class endNode : public cSimpleModule{
     private:
         int seq=0;
+        int rcvPack;
     protected:
        virtual void initialize() override;
        virtual void handleMessage(cMessage *msg) override;
@@ -18,7 +19,8 @@ class endNode : public cSimpleModule{
 Define_Module(endNode);
 
 void endNode::initialize(){
-
+    rcvPack=0;
+    WATCH(rcvPack);
 }
 
 void endNode::handleMessage(cMessage *msg){
@@ -53,6 +55,7 @@ void endNode::handleMessage(cMessage *msg){
            send(ack,"out",gateIndex);
            EV << "\nRespuesta " << ack->getName() << " enviada por enlace " << gateIndex;
            EV << "\nPaquete llegado a destino sin errores";
+           rcvPack++;
        }
    }
 }

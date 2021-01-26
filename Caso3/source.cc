@@ -34,12 +34,9 @@ void source::handleMessage(cMessage *msg){
     EV << "\nSending packet from Source " << getIndex() << " At time " << simTime();
     myPacket* paquete=generarPaquete();
 
-    cMessage *prueba=new cMessage("prueba");
     send(paquete,"out");
     double t=exponential(0.5, 0);
     scheduleAt(simTime()+t, event);
-
-    //myPacket* p=check_and_cast<myPacket*>(msg);
 
 }
 

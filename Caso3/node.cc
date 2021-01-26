@@ -30,25 +30,6 @@ void node::initialize(){
     prob=(double)par("prob1");
     EV << "\nProb primer enlace: " << prob;
 
-    //Guardar los canales de los enlaces de salida
-    /*if(getIndex()==0){
-        channelOut[0]=gate("gate$o", 2)->getTransmissionChannel();
-        channelOut[1]=gate("gate$o", 3)->getTransmissionChannel();
-        //channelOut[0]=gate()
-        gates[0]=2;
-        gates[1]=3;
-    }else if(getIndex()==1){
-        channelOut[0]=gate("gate$o", 0)->getTransmissionChannel();
-        channelOut[1]=gate("gate$o", 1)->getTransmissionChannel();
-        gates[0]=0;
-        gates[1]=1;
-    }else if(getIndex()==2){
-        channelOut[0]=gate("gate$o", 1)->getTransmissionChannel();
-        channelOut[1]=gate("gate$o", 2)->getTransmissionChannel();
-        gates[0]=1;
-        gates[1]=2;
-    }*/
-
     channelOut[0]=gate("out", 0)->getTransmissionChannel();
     channelOut[1]=gate("out", 1)->getTransmissionChannel();
     //Generar las colaspara cada enlace de salida
@@ -84,8 +65,7 @@ void node::handleMessage(cMessage *msg){
             EV << "\nPaquete guardado en cola " << enlace;
         }
     }
-
-    if(strcmp(p->getSenderModule()->getClassName(),"node")==0){//Paquete viene de otro nodo
+    else{//Paquete viene de otro nodo
         EV << "\n If de paquetes llegados de nodo";
 
         int type=p->getType();
@@ -100,6 +80,8 @@ void node::handleMessage(cMessage *msg){
                     EV << "\nACK recibido";
                     delete(p);
                     queueOut[gateIndex]->pop();
+
+                    EV << "\nqueue length: " << queueOut[gateIndex]->getLength();
 
                     if(!queueOut[enlace]->isEmpty() && !channelOut[enlace]->isBusy()){
                         enviarPaqueteCola();
