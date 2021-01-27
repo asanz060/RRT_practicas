@@ -1,0 +1,50 @@
+version 2
+run General-0-20210127-17:30:06-12677
+attr configname General
+attr datetime 20210127-17:30:06
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network StopAndWait
+attr processid 12677
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+statistic StopAndWait.endNode[0] "hop count"
+field count 314
+field mean 2.3407643312102
+field stddev 0.57236189249117
+field min 2
+field max 4
+field sum 735
+field sqrsum 1823
+attr type int
+bin	-inf	0
+bin	0	0
+bin	1	0
+bin	2	223
+bin	3	75
+bin	4	16
+bin	5	0
+statistic StopAndWait.endNode[1] "hop count"
+field count 1174
+field mean 2.2904599659284
+field stddev 0.50568224880757
+field min 2
+field max 4
+field sum 2689
+field sqrsum 6459
+attr type int
+bin	-inf	0
+bin	0	0
+bin	1	0
+bin	2	862
+bin	3	283
+bin	4	29
+bin	5	0
+

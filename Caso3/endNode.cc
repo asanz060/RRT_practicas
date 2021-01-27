@@ -11,10 +11,15 @@ class endNode : public cSimpleModule{
         int seqAck;
         int seqNak;
         int rcvPack;
+
+        //stat
+        cLongHistogram hopCountStats;
+        cOutVector hopCountVector;
+
     protected:
        virtual void initialize() override;
        virtual void handleMessage(cMessage *msg) override;
-
+       virtual void finish() override;
 };
 
 Define_Module(endNode);
@@ -24,6 +29,13 @@ void endNode::initialize(){
     seqNak=0;
     rcvPack=0;
     WATCH(rcvPack);
+    WATCH(seqAck);
+    WATCH(seqNak);
+
+    //Stats
+    hopCountStats.setName("HopCountStats");
+    hopCountStats.setRangeAutoUpper(0, 10, 1.5);
+    hopCountVector.setName("HopCount");
 }
 
 void endNode::handleMessage(cMessage *msg){
@@ -59,6 +71,15 @@ void endNode::handleMessage(cMessage *msg){
            EV << "\nRespuesta " << ack->getName() << " enviada por enlace " << gateIndex;
            EV << "\nPaquete llegado a destino sin errores";
            rcvPack++;
+
+           //stat
+           p->setHopCount(p->getHopCount()+1);
+           hopCountVector.record(p->getHopCount());
+           hopCountStats.collect(p->getHopCount());
        }
    }
+}
+
+void endNode::finish(){
+    hopCountStats.recordAs("hop count");
 }

@@ -184,6 +184,7 @@ myPacket::myPacket(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
     this->seq = 0;
     this->source = 0;
     this->type = 0;
+    this->hopCount = 0;
 }
 
 myPacket::myPacket(const myPacket& other) : ::omnetpp::cPacket(other)
@@ -208,6 +209,7 @@ void myPacket::copy(const myPacket& other)
     this->seq = other.seq;
     this->source = other.source;
     this->type = other.type;
+    this->hopCount = other.hopCount;
 }
 
 void myPacket::parsimPack(omnetpp::cCommBuffer *b) const
@@ -216,6 +218,7 @@ void myPacket::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->seq);
     doParsimPacking(b,this->source);
     doParsimPacking(b,this->type);
+    doParsimPacking(b,this->hopCount);
 }
 
 void myPacket::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -224,6 +227,7 @@ void myPacket::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->seq);
     doParsimUnpacking(b,this->source);
     doParsimUnpacking(b,this->type);
+    doParsimUnpacking(b,this->hopCount);
 }
 
 unsigned int myPacket::getSeq() const
@@ -254,6 +258,16 @@ unsigned short myPacket::getType() const
 void myPacket::setType(unsigned short type)
 {
     this->type = type;
+}
+
+unsigned int myPacket::getHopCount() const
+{
+    return this->hopCount;
+}
+
+void myPacket::setHopCount(unsigned int hopCount)
+{
+    this->hopCount = hopCount;
 }
 
 class myPacketDescriptor : public omnetpp::cClassDescriptor
@@ -321,7 +335,7 @@ const char *myPacketDescriptor::getProperty(const char *propertyname) const
 int myPacketDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 3+basedesc->getFieldCount() : 3;
+    return basedesc ? 4+basedesc->getFieldCount() : 4;
 }
 
 unsigned int myPacketDescriptor::getFieldTypeFlags(int field) const
@@ -336,8 +350,9 @@ unsigned int myPacketDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *myPacketDescriptor::getFieldName(int field) const
@@ -352,8 +367,9 @@ const char *myPacketDescriptor::getFieldName(int field) const
         "seq",
         "source",
         "type",
+        "hopCount",
     };
-    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
 }
 
 int myPacketDescriptor::findField(const char *fieldName) const
@@ -363,6 +379,7 @@ int myPacketDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='s' && strcmp(fieldName, "seq")==0) return base+0;
     if (fieldName[0]=='s' && strcmp(fieldName, "source")==0) return base+1;
     if (fieldName[0]=='t' && strcmp(fieldName, "type")==0) return base+2;
+    if (fieldName[0]=='h' && strcmp(fieldName, "hopCount")==0) return base+3;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -378,8 +395,9 @@ const char *myPacketDescriptor::getFieldTypeString(int field) const
         "unsigned int",
         "unsigned int",
         "unsigned short",
+        "unsigned int",
     };
-    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **myPacketDescriptor::getFieldPropertyNames(int field) const
@@ -449,6 +467,7 @@ std::string myPacketDescriptor::getFieldValueAsString(void *object, int field, i
         case 0: return ulong2string(pp->getSeq());
         case 1: return ulong2string(pp->getSource());
         case 2: return ulong2string(pp->getType());
+        case 3: return ulong2string(pp->getHopCount());
         default: return "";
     }
 }
@@ -466,6 +485,7 @@ bool myPacketDescriptor::setFieldValueAsString(void *object, int field, int i, c
         case 0: pp->setSeq(string2ulong(value)); return true;
         case 1: pp->setSource(string2ulong(value)); return true;
         case 2: pp->setType(string2ulong(value)); return true;
+        case 3: pp->setHopCount(string2ulong(value)); return true;
         default: return false;
     }
 }

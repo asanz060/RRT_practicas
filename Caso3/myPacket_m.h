@@ -26,6 +26,8 @@
  *     unsigned int seq;
  *     unsigned int source;
  *     unsigned short type;
+ * 
+ *     unsigned int hopCount;
  * }
  * </pre>
  */
@@ -35,6 +37,7 @@ class myPacket : public ::omnetpp::cPacket
     unsigned int seq;
     unsigned int source;
     unsigned short type;
+    unsigned int hopCount;
 
   private:
     void copy(const myPacket& other);
@@ -59,6 +62,8 @@ class myPacket : public ::omnetpp::cPacket
     virtual void setSource(unsigned int source);
     virtual unsigned short getType() const;
     virtual void setType(unsigned short type);
+    virtual unsigned int getHopCount() const;
+    virtual void setHopCount(unsigned int hopCount);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const myPacket& obj) {obj.parsimPack(b);}

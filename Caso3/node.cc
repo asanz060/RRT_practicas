@@ -45,6 +45,9 @@ void node::handleMessage(cMessage *msg){
     if(strcmp(p->getSenderModule()->getClassName(),"source")==0){//Paquete viene de las fuentes, no tienen error, no hay que enviar ACK/NAK
         EV << "\nIf de paquetes llegados de fuente";
 
+        //stat
+        p->setHopCount(p->getHopCount()+1);
+
         double rnd=((double)rand())/RAND_MAX;
         if(rnd<prob){
             enlace=0;
@@ -129,13 +132,27 @@ void node::tratarPaqueteNodo(myPacket *p){
         send(ack,"out",g->getIndex());
         EV << "\nRespuesta " << ack->getName() << " enviada por enlace " << g->getIndex();
 
+        //stat
+        p->setHopCount(p->getHopCount()+1);
+
         double rnd=((double)rand())/RAND_MAX;
         if(rnd<prob){
             enlace=0;
         }else{
             enlace=1;
         }
-        queueOut[enlace]->insert(p);
+
+        if(queueOut[enlace]->isEmpty()){ //Si la cola esta vacia: insertar y enviar
+            queueOut[enlace]->insert(p);
+            EV << "\nPaquete guardado en cola " << enlace;
+
+            if(channelOut[enlace]->isBusy()==false){
+                enviarPaqueteCola();
+            }
+        }else{ //Si hay paquetes en la cola: solo insertar
+            queueOut[enlace]->insert(p);
+            EV << "\nPaquete guardado en cola " << enlace;
+        }
 
         EV << "\nPaquete guardado en cola " << enlace;
     }

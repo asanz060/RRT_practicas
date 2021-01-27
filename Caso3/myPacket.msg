@@ -16,7 +16,9 @@
 packet myPacket{
  	unsigned int seq;
  	unsigned int source;
- 	unsigned short type;   
+ 	unsigned short type;
+ 	
+ 	unsigned int hopCount; 
 }
 
 //Type: mensaje (0), ACK (1), NAK (2)

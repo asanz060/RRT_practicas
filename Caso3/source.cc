@@ -46,6 +46,8 @@ myPacket* source::generarPaquete(){
     p->setSeq(seq);
     p->setSource(getIndex());
     p->setType(0);
+    //stat
+    p->setHopCount(0);
     seq++;
     double l=exponential(meanLength, 0);
     EV << "\nPacket length: " << l << " Seq: " << seq;

@@ -1,0 +1,23 @@
+file 39775 1611765018                                           
+version 2
+run General-0-20210127-17:30:06-12677
+attr configname General
+attr datetime 20210127-17:30:06
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network StopAndWait
+attr processid 12677
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 0 StopAndWait.endNode[1] HopCount ETV
+vector 1 StopAndWait.endNode[0] HopCount ETV
+0	448 30989 23 20041 1.605065379024 1113.862637252283 1174 2 4 2689 6459
+1	31437 8337 77 19961 4.379420722134 1109.767437252283 314 2 4 735 1823
+

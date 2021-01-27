@@ -57,7 +57,6 @@ network StopAndWait
             delay = 0.1ms;
         }
     submodules:
-        //node PROBS???
         src[3]: source {
             @display("p=50,50,c,200");
         }
