@@ -8,14 +8,13 @@ using namespace omnetpp;
 
 class node : public cSimpleModule{
     private:
-        int seq=0;
-        simtime_t startTime=0;
-        cMessage *event;
+        int seqAck;
+        int seqNak;
+        int enlace;
         double prob;
         cChannel* channelOut[2];
         cQueue* queueOut[2];
-        int enlace;
-        int gates[2];
+
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
@@ -26,7 +25,8 @@ class node : public cSimpleModule{
 Define_Module(node);
 
 void node::initialize(){
-    //node n=getSystemModule();
+    seqAck=0;
+    seqNak=0;
     prob=(double)par("prob1");
     EV << "\nProb primer enlace: " << prob;
 
@@ -38,7 +38,6 @@ void node::initialize(){
 }
 
 void node::handleMessage(cMessage *msg){
-    //delete msg;
     myPacket* p=check_and_cast<myPacket*>(msg);
 
     EV << "\nPaquete recibido de " << p->getSenderModule()->getClassName() << p->getSenderModule()->getIndex();
@@ -111,10 +110,10 @@ void node::tratarPaqueteNodo(myPacket *p){
     if(p->hasBitError()){
         //SEND NAK
         myPacket* nak=new myPacket("NAK");
-        nak->setSeq(seq);
+        nak->setSeq(seqNak);
         nak->setSource(getIndex());
         nak->setType(2);
-        seq++;
+        seqNak++;
 
         send(nak,"out",g->getIndex());
         EV << "\nRespuesta " << nak->getName() << " enviada por enlace " << g->getIndex();
@@ -122,10 +121,10 @@ void node::tratarPaqueteNodo(myPacket *p){
     }else{
         //SEND ACK
         myPacket* ack=new myPacket("ACK");
-        ack->setSeq(seq);
+        ack->setSeq(seqAck);
         ack->setSource(getIndex());
         ack->setType(1);
-        seq++;
+        seqAck++;
 
         send(ack,"out",g->getIndex());
         EV << "\nRespuesta " << ack->getName() << " enviada por enlace " << g->getIndex();

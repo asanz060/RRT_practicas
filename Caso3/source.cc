@@ -8,11 +8,9 @@ using namespace omnetpp;
 
 class source : public cSimpleModule{
     private:
-        double lambda=2;
         double meanLength=1000;
-        int n=100;
+        double meanTime=0.5;
         int seq=0;
-        simtime_t startTime=0;
         cMessage *event;
     protected:
         virtual void initialize() override;
@@ -25,7 +23,7 @@ Define_Module(source);
 void source::initialize(){
     event=new cMessage("event");
 
-    double t=exponential(0.5, 0);
+    double t=exponential(meanTime, 0);
     EV << "\nInitial time: " << t;
     scheduleAt(simTime()+t, event);
 }
@@ -49,7 +47,7 @@ myPacket* source::generarPaquete(){
     p->setSource(getIndex());
     p->setType(0);
     seq++;
-    double l=exponential(1000, 0);
+    double l=exponential(meanLength, 0);
     EV << "\nPacket length: " << l << " Seq: " << seq;
     p->setBitLength(l);
 

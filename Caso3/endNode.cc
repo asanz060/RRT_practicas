@@ -8,7 +8,8 @@ using namespace omnetpp;
 
 class endNode : public cSimpleModule{
     private:
-        int seq=0;
+        int seqAck;
+        int seqNak;
         int rcvPack;
     protected:
        virtual void initialize() override;
@@ -19,6 +20,8 @@ class endNode : public cSimpleModule{
 Define_Module(endNode);
 
 void endNode::initialize(){
+    seqAck=0;
+    seqNak=0;
     rcvPack=0;
     WATCH(rcvPack);
 }
@@ -36,10 +39,10 @@ void endNode::handleMessage(cMessage *msg){
        if(p->hasBitError()){
            //SEND NAK
            myPacket* nak=new myPacket("NAK");
-           nak->setSeq(seq);
+           nak->setSeq(seqNak);
            nak->setSource(getIndex());
            nak->setType(2);
-           seq++;
+           seqNak++;
 
            send(nak,"out",gateIndex);
            EV << "\nRespuesta " << nak->getName() << " enviada por enlace " << gateIndex;
@@ -47,10 +50,10 @@ void endNode::handleMessage(cMessage *msg){
        }else{
            //SEND ACK
            myPacket* ack=new myPacket("ACK");
-           ack->setSeq(seq);
+           ack->setSeq(seqAck);
            ack->setSource(getIndex());
            ack->setType(1);
-           seq++;
+           seqAck++;
 
            send(ack,"out",gateIndex);
            EV << "\nRespuesta " << ack->getName() << " enviada por enlace " << gateIndex;
